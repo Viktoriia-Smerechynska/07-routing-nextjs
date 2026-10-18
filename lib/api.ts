@@ -1,5 +1,4 @@
 // src/lib/api.ts
-
 import axios from 'axios';
 import { Note } from '@/types/note';
 
@@ -7,6 +6,7 @@ export type NoteListResponse = {
   notes: Note[];
   totalPages: number;
 };
+
 const KEY = process.env.NEXT_PUBLIC_NOTEHUB_TOKEN;
 const headers: Record<string, string> = {};
 
@@ -20,7 +20,7 @@ export const api = axios.create({
   headers,
 });
 
-export const getNotes = async (page: number = 1, searchQuery: string = '') => {
+export const fetchNotes = async (page: number = 1, searchQuery: string = '', tag: string = '') => {
   const params: Record<string, any> = {
     page: Number(page),
     perPage: 12,
@@ -30,9 +30,15 @@ export const getNotes = async (page: number = 1, searchQuery: string = '') => {
     params.search = searchQuery.trim();
   }
 
+  if (tag && tag.trim() !== '' && tag !== 'all') {
+    params.tag = tag.trim();
+  }
+
   const res = await api.get<NoteListResponse>('/notes', { params });
   return res.data;
 };
+
+export const getNotes = fetchNotes;
 
 export const getSingleNote = async (id: string) => {
   const res = await api.get<Note>(`/notes/${id}`);
