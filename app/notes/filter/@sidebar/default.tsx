@@ -1,14 +1,18 @@
 // src/app/notes/filter/@sidebar/default.tsx
-'use client';
-
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
 import css from './SidebarNotes.module.css';
 
-export default function SidebarNotes() {
-  const params = useParams();
+interface SidebarNotesProps {
+  params: Promise<{
+    slug?: string[];
+  }>;
+}
 
-  const currentTag = params?.tag as string;
+export default async function SidebarNotes({ params }: SidebarNotesProps) {
+  const resolvedParams = await params;
+
+  const slugArray = resolvedParams.slug;
+  const currentTag = slugArray && slugArray.length > 0 ? slugArray[0] : 'all';
 
   const tags = ['Todo', 'Work', 'Personal', 'Meeting', 'Shopping'];
 

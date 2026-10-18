@@ -26,11 +26,7 @@ export default function NotePreviewClient({ id }: NotePreviewClientProps) {
   });
 
   const handleClose = () => {
-    if (note?.tag) {
-      router.push(`/notes/filter/${note.tag}`);
-    } else {
-      router.push('/notes/filter/all');
-    }
+    router.back();
   };
 
   return (
